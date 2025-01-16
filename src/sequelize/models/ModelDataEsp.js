@@ -22,6 +22,11 @@ ModelDataEsp.init(
       allowNull: false,
       field: 'LONGITUDE',
     },
+    registrationDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      field: 'REGISTRATION_DATE',
+    },
   },
   {
     sequelize: sequelizeMysql,

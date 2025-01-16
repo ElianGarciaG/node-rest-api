@@ -36,3 +36,20 @@ export const turnToCamelCase = (string) => {
 
   return camelcase(string)
 }
+
+/*
+ * Función para convertir un string a un numero (incluye float o integer).
+ */
+export const toNumber = (arg) => {
+  if (isEmpty(arg) || typeof arg === 'number') {
+    return arg
+  }
+
+  // Verifica si el string contiene solo números o un punto para los decimales o un signo negativo.
+  if (!/^-?[0-9]+(\.[0-9]+)?$/.test(arg)) {
+    return null
+  }
+
+  const number = parseFloat(arg)
+  return isNaN(number) ? null : number
+}

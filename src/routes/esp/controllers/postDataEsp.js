@@ -8,13 +8,13 @@ export default async (req, res) => {
   const { latitude, longitude } = req.body ?? {}
 
   if (isEmpty(latitude)) {
-    const error = `Se debe enviar la informacion de latitud`
+    const error = `Latitude information must be sent`
     logger.error(`${fName} ${error}`)
     return res.status(400).json({ success: false, error })
   }
 
   if (isEmpty(longitude)) {
-    const error = `Se debe enviar la informacion de longitud`
+    const error = `Longitude information must be sent`
     logger.error(`${fName} ${error}`)
     return res.status(400).json({ success: false, error })
   }
@@ -26,5 +26,12 @@ export default async (req, res) => {
     longitude,
   })
 
-  res.status(result?.success ? 200 : 400).json(result)
+  if (!result?.success) {
+    const error = result?.error ?? `Error inserting information`
+    logger.error(`${fName} ${error}`)
+    return res.status(400).json({ success: false, error })
+  }
+
+  logger.info(`${fName} - Successfull result...`)
+  res.status(200).json(result)
 }
