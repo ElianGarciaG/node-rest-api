@@ -1,6 +1,76 @@
-import app from './app.js'
-import {PORT} from './config.js'
+import express from 'express'
+import { corsMiddleware } from './middlewares/cors.js'
+import logger from './util/logger.js'
 
-app.listen(PORT);
+import espRoutes from './routes/esp/index.js'
 
-console.log("server listening on port ", PORT);
+const app = express()
+
+// set up cors
+app.use(corsMiddleware)
+
+//Preflight
+app.options('*', corsMiddleware)
+
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf
+    },
+  })
+)
+
+app.use(
+  express.urlencoded({
+    extended: false,
+    verify: (req, res, buf) => {
+      req.rawBody = buf
+    },
+  })
+)
+
+app.use(
+  express.raw({
+    extended: false,
+    verify: (req, res, buf) => {
+      req.rawBody = buf
+    },
+  })
+)
+
+app.get('/healthCheck', function (req, res) {
+  res.status(200).json({
+    success: true,
+    message: 'Service Running correct',
+  })
+})
+
+// ESP
+app.use('/esp', espRoutes)
+
+// the default route should just be a 404 to minimize attack surface
+app.get('/', function (req, res) {
+  res.status(404).json({ error: 'Not Authorized' })
+})
+
+app.use(function (req, res) {
+  res.status(404).json({ error: 'Not Authorized' })
+})
+
+app.use(function (err, req, res) {
+  console.error(err.stack)
+  res.status(500).json({ error: 'Server Error' })
+})
+
+const port = parseInt(process.env.PORT ?? 80, 10)
+app.listen(port, async () => {
+  logger.info('Listening Port: ' + port)
+})
+
+const processTerminate = async (signal) => {
+  logger.info(`Received ${signal}. Terminating the process`)
+  process.exit(0)
+}
+
+// Handle process termination
+process.once('SIGTERM', processTerminate).once('SIGINT', processTerminate)
