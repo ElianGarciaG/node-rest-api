@@ -8,7 +8,7 @@ export default class ServiceDataEsp {
   /**
    * Find data
    */
-  findDataEspByCriteria = async ({ idRow, numRecords = 10 } = {}) => {
+  findDataEspByCriteria = async ({ id, numRecords = 10 } = {}) => {
     const fName = '[findDataEspByCriteria]'
 
     // The query object is constructed
@@ -20,9 +20,9 @@ export default class ServiceDataEsp {
       log += ` number of records: ${numRecords}`
     }
 
-    if (!isEmpty(idRow)) {
-      where.idRow = idRow
-      log += ` rowId: ${idRow}`
+    if (!isEmpty(id)) {
+      where.idRow = id
+      log += ` rowId: ${id}`
     }
 
     try {

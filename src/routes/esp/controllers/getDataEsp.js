@@ -5,12 +5,12 @@ import logger from '../../../util/logger.js'
 export default async (req, res) => {
   const fName = '[getDataEsp]'
 
-  const { idRow, numRecords } = req.query ?? {}
+  const { id, numRecords } = req.query ?? {}
 
   logger.info(`${fName} - Execute ServiceDataEsp...`)
   const serviceDataEsp = new ServiceDataEsp()
   const result = await serviceDataEsp.findDataEspByCriteria({
-    idRow,
+    id,
     numRecords,
   })
 

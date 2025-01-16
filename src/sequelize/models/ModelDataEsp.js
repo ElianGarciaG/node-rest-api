@@ -5,7 +5,7 @@ export default class ModelDataEsp extends Model {}
 
 ModelDataEsp.init(
   {
-    idRow: {
+    id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
